@@ -8,7 +8,8 @@ const config_1 = __importDefault(require("./config/config"));
 const dbOptions = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useFindAndModify: false
 };
 mongoose_1.default.connect(config_1.default.DB.URI, dbOptions);
 const connection = mongoose_1.default.connection;

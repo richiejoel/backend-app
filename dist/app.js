@@ -21,6 +21,7 @@ app.use(express_1.default.json({ limit: '50mb' }));
 app.use(express_1.default.urlencoded({ limit: '50mb', extended: false }));
 app.use(passport_1.default.initialize());
 passport_1.default.use(passport_2.default);
+app.disable('etag');
 //routes
 app.get("/", (req, res) => {
     res.send(`The api initial is por ${app.get("port")} `);

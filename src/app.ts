@@ -22,6 +22,7 @@ app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb', extended: false}));
 app.use(passport.initialize());
 passport.use(passportMiddleware);
+app.disable('etag');
 
 
 //routes

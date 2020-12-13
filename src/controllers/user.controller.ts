@@ -30,7 +30,6 @@ export const signUp = async (req:Request, res:Response): Promise<Response> => {
             } else {
                 console.log(error);
             }
-            
         });
     }
 
@@ -87,6 +86,17 @@ export const consultarUsuariosAll = async (req:Request, res:Response): Promise<R
     }
 }
 
+export const consultarUsuariosAllTxt = async (req:Request, res:Response): Promise<Response> => {
+    
+    const users = await User.find({}, {_id:0, document:1, name:1, email:1, occupation:1});
+
+    if(!users){
+        return res.status(400).json({msg: "Error in the backend"});
+    } else {
+        return res.status(201).json({usuarios: users});
+    }
+}
+
 export const consultarUsuarioUrl = async (req:Request, res:Response): Promise<Response> => {
     if(!req.body.document){
         return res.status(400).json({msg: "Please. Send the document of user."});
@@ -113,8 +123,70 @@ export const consultarUsuariosUrlAll = async (req:Request, res:Response): Promis
 }
 
 
-export const consultarImagen = (req:Request, res:Response) => {
-    return res.sendFile(`/uploads/488201cb-ce4a-4dd2-a66d-b465bac9f8c6.png`);
+export const deleteOneUser = async (req:Request, res:Response): Promise<Response> => {
+    if(!req.body.document){
+        return res.status(400).json({msg: "Please. Send the document of user."});
+    }
+
+    const user = await User.findOne({document: req.body.document});
+
+    if(!user){
+        return res.status(400).json({msg: "The user does not exists"});
+    } else {
+        return res.status(201).json({msg: "Delete succesfull"});
+    }
+
+}
+
+export const updateUser = async (req:Request, res:Response): Promise<Response> => {
+    if(!req.body.document ){
+        return res.status(400).json({msg: "Please. Send the document of user."});
+    }
+
+    const user = await User.findOne({document: req.body.document});
+    
+
+    if(!user){
+        return res.status(400).json({msg: "The user does not exists"});
+    } else {
+        
+        const name = (!req.body.name) ? user.name : req.body.name;
+        const email = (!req.body.email) ? user.email : req.body.email;
+        const imagePath = (!req.body.imagePath) ? user.imagePath : req.body.imagePath;
+        const imageb64 = (!req.body.imageb64) ? user.imgbase64 : req.body.imageb64;
+
+        console.log(`Id -> ${user._id}`);
+        console.log(`Nombre -> ${user.name}`);
+        console.log(`Body email -> ${req.body.email}`);
+
+        if(req.body.imgbase64){
+            req.body.imagePath = "uploads/"+user.imagePath+".png";
+            fs.writeFile(req.body.imagePath ,req.body.imgbase64, "base64",(error:any)=>{
+                if(!error){
+                    console.log("Exito");
+                } else {
+                    console.log(error);
+                }
+                
+            });
+        }
+
+        console.log(`Name final -> ${name}`);
+
+        const us = User.findByIdAndUpdate({_id: user._id}, {name: name, email: email, imagePath: imagePath, imgbase64: imageb64}, {new: true}, function(err, result){
+            //console.log(`Result -> ${result}`);
+        });
+           
+        if(!us){
+            return res.status(400).json({msg: "Error in the backend."});
+        } else {
+            
+            return res.status(201).json({msg: "Update succesfull"});
+        }
+
+    }
+
+
 }
 
 /* http://localhost:3000/uploads/dd4fa1c7-7777-4aa3-vbnu-93773fa11565.png */
