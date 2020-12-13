@@ -11,6 +11,7 @@ router.get("/consultarUsuariosAllTxt", user_controller_1.consultarUsuariosAllTxt
 router.post("/consultarUsuarioUrl", user_controller_1.consultarUsuarioUrl);
 router.get("/consultarUsuariosUrlAll", user_controller_1.consultarUsuariosUrlAll);
 router.put("/updateUser", user_controller_1.updateUser);
+router.post("/deleteOneUser", user_controller_1.deleteOneUser);
 //router.get('/images/:img',consultarImagen);
 //consultarUsuarioUrl
 exports.default = router;

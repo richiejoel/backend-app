@@ -125,7 +125,20 @@ exports.deleteOneUser = (req, res) => __awaiter(void 0, void 0, void 0, function
         return res.status(400).json({ msg: "The user does not exists" });
     }
     else {
-        return res.status(201).json({ msg: "Delete succesfull" });
+        const us = user_1.default.findOneAndDelete({ _id: user._id }, function (err, result) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                console.log(`Delete ${user.document} ${user.name}`);
+            }
+        });
+        if (us) {
+            return res.status(201).json({ msg: "Delete succesfull" });
+        }
+        else {
+            return res.status(400).json({ msg: "Error in the backend" });
+        }
     }
 });
 exports.updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -139,6 +152,7 @@ exports.updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     else {
         const name = (!req.body.name) ? user.name : req.body.name;
         const email = (!req.body.email) ? user.email : req.body.email;
+        const occupation = (!req.body.occupation) ? user.occupation : req.body.occupation;
         const imagePath = (!req.body.imagePath) ? user.imagePath : req.body.imagePath;
         const imageb64 = (!req.body.imageb64) ? user.imgbase64 : req.body.imageb64;
         console.log(`Id -> ${user._id}`);
@@ -156,7 +170,7 @@ exports.updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             });
         }
         console.log(`Name final -> ${name}`);
-        const us = user_1.default.findByIdAndUpdate({ _id: user._id }, { name: name, email: email, imagePath: imagePath, imgbase64: imageb64 }, { new: true }, function (err, result) {
+        const us = user_1.default.findByIdAndUpdate({ _id: user._id }, { name: name, email: email, occupation: occupation, imagePath: imagePath, imgbase64: imageb64 }, { new: true }, function (err, result) {
             //console.log(`Result -> ${result}`);
         });
         if (!us) {
@@ -167,5 +181,8 @@ exports.updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         }
     }
 });
-/* http://localhost:3000/uploads/dd4fa1c7-7777-4aa3-vbnu-93773fa11565.png */ 
+/*
+Fomato de consumo de imagenes por URL (cambiar localhost por su ip al probar desde algún canal)
+http://localhost:3000/uploads/dd4fa1c7-7777-4aa3-vbnu-93773fa11565.png
+*/ 
 //# sourceMappingURL=user.controller.js.map

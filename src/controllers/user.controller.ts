@@ -124,6 +124,7 @@ export const consultarUsuariosUrlAll = async (req:Request, res:Response): Promis
 
 
 export const deleteOneUser = async (req:Request, res:Response): Promise<Response> => {
+
     if(!req.body.document){
         return res.status(400).json({msg: "Please. Send the document of user."});
     }
@@ -133,7 +134,20 @@ export const deleteOneUser = async (req:Request, res:Response): Promise<Response
     if(!user){
         return res.status(400).json({msg: "The user does not exists"});
     } else {
-        return res.status(201).json({msg: "Delete succesfull"});
+
+        const us = User.findOneAndDelete({_id: user._id}, function(err, result){
+            if(err){
+                console.log(err);
+            } else {
+                console.log(`Delete ${user.document} ${user.name}`);
+            }
+        });
+        if(us){
+            return res.status(201).json({msg: "Delete succesfull"});
+        } else {
+            return res.status(400).json({msg: "Error in the backend"});
+        }
+       
     }
 
 }
@@ -152,6 +166,7 @@ export const updateUser = async (req:Request, res:Response): Promise<Response> =
         
         const name = (!req.body.name) ? user.name : req.body.name;
         const email = (!req.body.email) ? user.email : req.body.email;
+        const occupation =  (!req.body.occupation) ? user.occupation : req.body.occupation;
         const imagePath = (!req.body.imagePath) ? user.imagePath : req.body.imagePath;
         const imageb64 = (!req.body.imageb64) ? user.imgbase64 : req.body.imageb64;
 
@@ -173,7 +188,7 @@ export const updateUser = async (req:Request, res:Response): Promise<Response> =
 
         console.log(`Name final -> ${name}`);
 
-        const us = User.findByIdAndUpdate({_id: user._id}, {name: name, email: email, imagePath: imagePath, imgbase64: imageb64}, {new: true}, function(err, result){
+        const us = User.findByIdAndUpdate({_id: user._id}, {name: name, email: email, occupation: occupation, imagePath: imagePath, imgbase64: imageb64}, {new: true}, function(err, result){
             //console.log(`Result -> ${result}`);
         });
            
@@ -189,4 +204,7 @@ export const updateUser = async (req:Request, res:Response): Promise<Response> =
 
 }
 
-/* http://localhost:3000/uploads/dd4fa1c7-7777-4aa3-vbnu-93773fa11565.png */
+/*
+Fomato de consumo de imagenes por URL (cambiar localhost por su ip al probar desde algún canal)
+http://localhost:3000/uploads/dd4fa1c7-7777-4aa3-vbnu-93773fa11565.png 
+*/
