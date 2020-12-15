@@ -167,15 +167,14 @@ export const updateUser = async (req:Request, res:Response): Promise<Response> =
         const name = (!req.body.name) ? user.name : req.body.name;
         const email = (!req.body.email) ? user.email : req.body.email;
         const occupation =  (!req.body.occupation) ? user.occupation : req.body.occupation;
-        const imagePath = (!req.body.imagePath) ? user.imagePath : req.body.imagePath;
-        const imageb64 = (!req.body.imageb64) ? user.imgbase64 : req.body.imageb64;
+        const imgbase64 = (!req.body.imgbase64) ? user.imgbase64 : req.body.imgbase64;
 
         console.log(`Id -> ${user._id}`);
         console.log(`Nombre -> ${user.name}`);
         console.log(`Body email -> ${req.body.email}`);
 
         if(req.body.imgbase64){
-            req.body.imagePath = "uploads/"+user.imagePath+".png";
+            req.body.imagePath = user.imagePath;
             fs.writeFile(req.body.imagePath ,req.body.imgbase64, "base64",(error:any)=>{
                 if(!error){
                     console.log("Exito");
@@ -188,7 +187,7 @@ export const updateUser = async (req:Request, res:Response): Promise<Response> =
 
         console.log(`Name final -> ${name}`);
 
-        const us = User.findByIdAndUpdate({_id: user._id}, {name: name, email: email, occupation: occupation, imagePath: imagePath, imgbase64: imageb64}, {new: true}, function(err, result){
+        const us = User.findByIdAndUpdate({_id: user._id}, {name: name, email: email, occupation: occupation, imgbase64: imgbase64}, {new: true}, function(err, result){
             //console.log(`Result -> ${result}`);
         });
            
