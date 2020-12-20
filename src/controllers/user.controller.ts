@@ -159,6 +159,7 @@ export const deleteOneUser = async (req:Request, res:Response): Promise<Response
 
 }
 
+//Actualizar usuarios
 export const updateUser = async (req:Request, res:Response): Promise<Response> => {
     if(!req.body.document ){
         return res.status(400).json({msg: "Please. Send the document of user."});
