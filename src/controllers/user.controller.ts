@@ -122,7 +122,7 @@ export const consultarUsuariosUrlAll = async (req:Request, res:Response): Promis
     }
 }
 
-
+//Eliminar usuarios
 export const deleteOneUser = async (req:Request, res:Response): Promise<Response> => {
 
     if(!req.body.document){
