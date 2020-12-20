@@ -125,6 +125,13 @@ exports.deleteOneUser = (req, res) => __awaiter(void 0, void 0, void 0, function
         return res.status(400).json({ msg: "The user does not exists" });
     }
     else {
+        try {
+            fs.unlinkSync(user.imagePath);
+            console.log('File delete succesfull');
+        }
+        catch (err) {
+            console.log(`Don't removed image -> ${err}`);
+        }
         const us = user_1.default.findOneAndDelete({ _id: user._id }, function (err, result) {
             if (err) {
                 console.log(err);
