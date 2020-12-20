@@ -3,7 +3,7 @@ import User, {IUser} from "../models/user";
 import jwt from "jsonwebtoken";
 import {v4 as uuid} from "uuid";
 import config from "../config/config";
-const fs = require("fs");
+const fs = require("fs").promises;
 
 function createToken(user: IUser){
     return jwt.sign({id: user.id, email: user.email}, config.jwtSecret, {
@@ -134,13 +134,13 @@ export const deleteOneUser = async (req:Request, res:Response): Promise<Response
     if(!user){
         return res.status(400).json({msg: "The user does not exists"});
     } else {
-
-        try{
-            fs.unlinkSync(user.imagePath);
-            console.log('File delete succesfull');
-        } catch (err){
-            console.log(`Don't removed image -> ${err}`);
-        }
+        //Elimina la imagen de la carpeta uploads
+        fs.unlink(user.imagePath)
+            .then(() => {
+                console.log('File delete succesfull');
+            }).catch((err:any) => {
+                console.error(`Don't removed image -> ${err}`);
+            });
 
         const us = User.findOneAndDelete({_id: user._id}, function(err, result){
             if(err){

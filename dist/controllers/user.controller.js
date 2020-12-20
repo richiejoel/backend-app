@@ -17,7 +17,7 @@ const user_1 = __importDefault(require("../models/user"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const uuid_1 = require("uuid");
 const config_1 = __importDefault(require("../config/config"));
-const fs = require("fs");
+const fs = require("fs").promises;
 function createToken(user) {
     return jsonwebtoken_1.default.sign({ id: user.id, email: user.email }, config_1.default.jwtSecret, {
         expiresIn: 86400
@@ -125,13 +125,13 @@ exports.deleteOneUser = (req, res) => __awaiter(void 0, void 0, void 0, function
         return res.status(400).json({ msg: "The user does not exists" });
     }
     else {
-        try {
-            fs.unlinkSync(user.imagePath);
+        //Elimina la imagen de la carpeta uploads
+        fs.unlink(user.imagePath)
+            .then(() => {
             console.log('File delete succesfull');
-        }
-        catch (err) {
-            console.log(`Don't removed image -> ${err}`);
-        }
+        }).catch((err) => {
+            console.error(`Don't removed image -> ${err}`);
+        });
         const us = user_1.default.findOneAndDelete({ _id: user._id }, function (err, result) {
             if (err) {
                 console.log(err);
